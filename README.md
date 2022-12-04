@@ -8,6 +8,21 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
+# or
+pnpm dev
+```
+
+example environment varibales
+
+```env
+NEXT_PUBLIC_WP_BASE_URL=https://thaiupdates.info
+NEXT_PUBLIC_WP_TITLE=PoC WP Redirect
+```
+
+example link to test
+
+```
+http://localhost:3000/?p=97885&redirect=true
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

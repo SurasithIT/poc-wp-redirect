@@ -46,7 +46,6 @@ export const getServerSideProps: GetServerSideProps<{
   const id = query?.p;
   const redirect = !!query?.redirect;
   const env = process.env;
-  console.log("redirect:", redirect);
 
   if (!id) {
     return {
