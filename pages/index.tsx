@@ -79,6 +79,28 @@ export default function Home({
     }
   }, [post, redirect]);
 
+  const getOGimageUrl = (url: string): string => {
+    if (!url) return url;
+    const jpgExtension = ".jpg";
+    const jpegExtension = ".jpeg";
+    const pngExtension = ".png";
+
+    let extension = "";
+
+    if (url.toLowerCase().includes(jpgExtension)) {
+      extension = jpgExtension;
+    } else if (url.toLowerCase().includes(jpegExtension)) {
+      extension = jpegExtension;
+    } else if (url.toLowerCase().includes(pngExtension)) {
+      extension = pngExtension;
+    }
+
+    const trimedUrl = url
+      .toLowerCase()
+      .substring(0, url.toLowerCase().indexOf(extension));
+    return trimedUrl + extension;
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -102,7 +124,7 @@ export default function Home({
         />
         <meta
           property="og:image"
-          content={post?.yoast_head_json.og_image[0].url}
+          content={getOGimageUrl(post?.yoast_head_json.og_image[0].url || "")}
         />
       </Head>
 
