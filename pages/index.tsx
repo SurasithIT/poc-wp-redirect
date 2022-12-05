@@ -83,7 +83,7 @@ export default function Home({
     <div className={styles.container}>
       <Head>
         <title>{post ? post.title.rendered : env.NEXT_PUBLIC_WP_TITLE}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/wordpress-circular-logo.png" />
         <meta property="og:url" content={env.NEXT_PUBLIC_WP_BASE_URL} />
         <meta property="og:type" content="website" />
         <meta
