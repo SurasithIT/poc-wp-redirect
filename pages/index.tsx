@@ -43,17 +43,11 @@ export const getServerSideProps: GetServerSideProps<{
   post: Post | null;
 }> = async (context: GetServerSidePropsContext) => {
   const { query } = context;
-  const id = query?.p;
+  const id = query?.p ?? null;
   const redirect = !!query?.redirect;
   const env = process.env;
 
-  if (!id) {
-    return {
-      props: { env, redirect, post: null },
-    };
-  }
-
-  if (redirect) {
+  if (redirect && id != null) {
     const redirectUrl = `${NEXT_PUBLIC_WP_BASE_URL}/?p=${id}`;
 
     return {
@@ -61,6 +55,12 @@ export const getServerSideProps: GetServerSideProps<{
         destination: redirectUrl,
         permanent: false,
       },
+    };
+  }
+
+  if (id == null) {
+    return {
+      props: { env, redirect, post: null },
     };
   }
 
