@@ -56,8 +56,17 @@ export const getServerSideProps: GetServerSideProps<{
   const res = await fetch(
     `${NEXT_PUBLIC_WP_BASE_URL}/wp-json/wp/v2/posts?include[]=${id}`
   );
-  const posts: Post[] = await res.json();
-  const post = posts?.[0];
+  const posts: Post[] = await res?.json();
+  const post = posts?.[0] ?? null;
+
+  if (redirect && !!post) {
+    return {
+      redirect: {
+        destination: post.guid.rendered,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
@@ -72,9 +81,9 @@ export default function Home({
   env,
   redirect,
   post,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
   useEffect(() => {
-    if (redirect && post) {
+    if (redirect && !!post) {
       router.push(post.guid.rendered);
     }
   }, [post, redirect]);
@@ -104,7 +113,7 @@ export default function Home({
   return (
     <div className={styles.container}>
       <Head>
-        <title>{post ? post.title.rendered : env.NEXT_PUBLIC_WP_TITLE}</title>
+        <title>{!!post ? post.title.rendered : env.NEXT_PUBLIC_WP_TITLE}</title>
         <link rel="icon" href="/wordpress-circular-logo.png" />
         <meta property="og:url" content={env.NEXT_PUBLIC_WP_BASE_URL} />
         <meta property="og:type" content="website" />
@@ -129,7 +138,7 @@ export default function Home({
       </Head>
 
       <main className={styles.main}>
-        {post ? (
+        {!!post ? (
           <div key={post.id}>
             <h1 className={styles.title}>{post.title.rendered}</h1>
             <div
