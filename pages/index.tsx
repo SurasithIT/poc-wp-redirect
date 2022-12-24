@@ -53,20 +53,22 @@ export const getServerSideProps: GetServerSideProps<{
     };
   }
 
+  if (redirect) {
+    const redirectUrl = `${NEXT_PUBLIC_WP_BASE_URL}/?p=${id}`;
+
+    return {
+      redirect: {
+        destination: redirectUrl,
+        permanent: false,
+      },
+    };
+  }
+
   const res = await fetch(
     `${NEXT_PUBLIC_WP_BASE_URL}/wp-json/wp/v2/posts?include[]=${id}`
   );
   const posts: Post[] = await res?.json();
   const post = posts?.[0] ?? null;
-
-  if (redirect && !!post) {
-    return {
-      redirect: {
-        destination: post.guid.rendered,
-        permanent: false,
-      },
-    };
-  }
 
   return {
     props: {
@@ -137,22 +139,23 @@ export default function Home({
         />
       </Head>
 
-      <main className={styles.main}>
-        {!!post ? (
-          <div key={post.id}>
-            <h1 className={styles.title}>{post.title.rendered}</h1>
-            <div
-              className="content"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
-            ></div>
-          </div>
-        ) : (
-          <div>
-            <h1 className={styles.title}>{env.NEXT_PUBLIC_WP_TITLE}</h1>
-          </div>
-        )}
-      </main>
-
+      {redirect ?? (
+        <main className={styles.main}>
+          {!!post ? (
+            <div key={post.id}>
+              <h1 className={styles.title}>{post.title.rendered}</h1>
+              <div
+                className="content"
+                dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              ></div>
+            </div>
+          ) : (
+            <div>
+              <h1 className={styles.title}>{env.NEXT_PUBLIC_WP_TITLE}</h1>
+            </div>
+          )}
+        </main>
+      )}
       <footer className={styles.footer}></footer>
     </div>
   );
